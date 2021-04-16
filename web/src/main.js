@@ -1,8 +1,8 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import vuetify from './plugins/vuetify'
 import App from './App.vue'
 
-Vue.config.productionTip = false
+const app = createApp(App)
+app.use(vuetify)
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+app.mount('#app')

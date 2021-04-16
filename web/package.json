@@ -3,22 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "vite preview",
+    "build": "vite build",
+    "lint": "vue-cli-service lint",
+    "dev": "vite"
   },
   "dependencies": {
+    "@mdi/font": "5.9.55",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "roboto-fontface": "*",
+    "vue": "^3.0.0",
+    "vuetify": "^3.0.0-alpha.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^1.1.5",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
+    "eslint-plugin-vue": "^7.0.0",
+    "sass": "^1.32.0",
+    "sass-loader": "^10.0.0",
+    "vite": "~2.0.5",
+    "vue-cli-plugin-vuetify": "~2.3.1"
   },
   "eslintConfig": {
     "root": true,
@@ -26,7 +35,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
