@@ -2,9 +2,9 @@
 package main
 
 import (
-	"bytes"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -21,7 +21,7 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 10485760
 )
 
 var (
@@ -32,17 +32,33 @@ var (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	// TODO: Dev only!
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
+	token string
+	mu sync.Mutex
+
 	hub *Hub
 
 	// The websocket connection.
 	conn *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan []byte
+	send chan Message
+
+	connection string
+}
+
+// Message is for JSON un-marshaling the messages
+type Message struct {
+	Token string `json:"token"`
+	Command string `json:"command"`
+	File string `json:"file"`
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -56,17 +72,31 @@ func (c *Client) readPump() {
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
-	c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	err := c.conn.SetReadDeadline(time.Now().Add(pongWait))
+	if err != nil {
+		return
+	}
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
-		_, message, err := c.conn.ReadMessage()
+		message := Message{}
+		err := c.conn.ReadJSON(&message)
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
-			}
+			log.Printf("Error reading json: %#v", err)
+
+			// if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+			// 	log.Printf("error: %v", err)
+			// }
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		// message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+
+		log.Printf("Got message: %#v\n", message.Command)
+
+		if err = c.conn.WriteJSON(message); err != nil {
+			log.Println(err)
+		}
+
 		c.hub.broadcast <- message
 	}
 }
@@ -109,7 +139,10 @@ func (c *Client) writePump() {
 				return
 			}
 		case <-ticker.C:
-			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			err := c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err != nil {
+				return
+			}
 			if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}

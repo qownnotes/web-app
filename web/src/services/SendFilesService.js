@@ -1,24 +1,31 @@
 class SendFilesService {
-    send(file) {
-        // const ws = new WebSocket("ws://" + document.location.host + "/ws");
-        const ws = new WebSocket("ws://localhost:8080/ws");
-        ws.binaryType = "arrayBuffer";
-        const reader = new FileReader();
-        let rawData = new ArrayBuffer();
+    send(ws, file) {
+        console.log("Send file...");
+        console.log(file);
+        let reader = new FileReader();
 
-        reader.loadend = function() {
-        }
+        reader.onerror = () => {
+            console.error(reader.error);
+        };
 
-        reader.onload = async (e) => {
-            rawData = e.target.result;
-            await ws.send(rawData);
-            // alert("the File has been transferred.");
+        reader.onload = (e) => {
+            console.log(e.target.result);
+            const data = {
+                "token": "123",
+                "command": "insertFile",
+                "file": e.target.result
+            }
+
+            console.log(data);
+            // ws.send(data);
+            ws.send(JSON.stringify(data));
 
             // ws.close();
             // TODO: Implement an acknowledge answer from the server for every client message
         }
 
-        ws.onopen = () => reader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
+        // ws.onopen = () => reader.readAsDataURL(file);
     }
 }
 
