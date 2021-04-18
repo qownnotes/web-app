@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -18,16 +20,31 @@ const (
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	// Maximum message size allowed from peer.
+	// 10MB maximum message size allowed from peer.
 	maxMessageSize = 10485760
 )
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	// TODO: Dev only!
 	CheckOrigin: func(r *http.Request) bool {
-		return true
+		origin := r.Header["Origin"]
+
+		if len(origin) == 0 {
+			return true
+		}
+
+		u, err := url.Parse(origin[0])
+		if err != nil {
+			return false
+		}
+
+		// Allow development from other localhost connections
+		if strings.Contains(u.Host, "localhost:") {
+			return true
+		}
+
+		return strings.ToLower(u.Host) == strings.ToLower(r.Host)
 	},
 }
 
@@ -53,7 +70,7 @@ func (s subscription) readPump() {
 	for {
 		_, msg, err := c.ws.ReadMessage()
 		if err != nil {
-			log.Printf("other error: %v", err)
+			// log.Printf("other error: %v", err)
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
 				log.Printf("error: %v", err)
 			}
