@@ -103,7 +103,7 @@
       sendFile () {
         this.sending = true;
         SendService.send(this.ws, this.currentFile)
-        setTimeout(() => (this.sending = false), 3000)
+        setTimeout(() => (this.sending = false), 1000)
       },
       selectFile(file) {
         this.sending = false;
@@ -114,7 +114,7 @@
     },
     beforeMount() {
       // const url = "\"ws://\" + document.location.host + \"/ws\"";
-      const url = "ws://localhost:8080/ws";
+      const url = "ws://localhost:8080/ws/111";
       this.ws = new WebSocket(url);
       this.ws.onopen = () => {
         console.log("Connected to socket " + url);

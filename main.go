@@ -16,7 +16,7 @@ func main() {
 
 	// Handle websocket
 	// This handler needs to be first so that the PathPrefix isn't blocking it
-	r.HandleFunc("/ws/{room:[0-9a-z]+}", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/ws/{room:[0-9a-zA-Z]+}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		room := vars["room"]
 		serveWs(w, r, room)
