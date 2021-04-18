@@ -41,12 +41,24 @@ func (h *hub) run() {
 		select {
 		case s := <-h.register:
 			connections := h.rooms[s.room]
-			log.Printf("registered room: %v", s.room)
 			if connections == nil {
 				connections = make(map[*connection]bool)
 				h.rooms[s.room] = connections
 			}
 			h.rooms[s.room][s.conn] = true
+
+			log.Printf("Registered room: %s", s.room)
+
+			// Send a warning to the connections of the room if there are more than two connections
+			if len(h.rooms[s.room]) > 2 {
+				log.Printf("Warning! More than 2 connections in room %s", s.room)
+
+				m := message{[]byte(
+					"{\"command\": \"showWarning\", " +
+					"\"msg\": \"More than 2 connections with this token! Are multiple instances of QOwnNotes active?\"}"),
+					s.room, nil}
+				sendMessage(m)
+			}
 		case s := <-h.unregister:
 			connections := h.rooms[s.room]
 			if connections != nil {
@@ -59,22 +71,26 @@ func (h *hub) run() {
 				}
 			}
 		case m := <-h.broadcast:
-			connections := h.rooms[m.room]
-			for c := range connections {
-				// Don't send sender the message back
-				if c == m.sender {
-					continue
-				}
+			sendMessage(m)
+		}
+	}
+}
 
-				select {
-				case c.send <- m.data:
-				default:
-					close(c.send)
-					delete(connections, c)
-					if len(connections) == 0 {
-						delete(h.rooms, m.room)
-					}
-				}
+func sendMessage(m message) {
+	connections := h.rooms[m.room]
+	for c := range connections {
+		// Don't send sender the message back
+		if c == m.sender {
+			continue
+		}
+
+		select {
+		case c.send <- m.data:
+		default:
+			close(c.send)
+			delete(connections, c)
+			if len(connections) == 0 {
+				delete(h.rooms, m.room)
 			}
 		}
 	}
