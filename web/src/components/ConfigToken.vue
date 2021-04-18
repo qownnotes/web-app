@@ -6,6 +6,7 @@
         v-model="token"
         @change="change"
         hide-details="auto"
+        type="password"
     ></v-text-field>
   </v-container>
 </template>
