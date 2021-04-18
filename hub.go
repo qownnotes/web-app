@@ -5,6 +5,7 @@ import "log"
 type message struct {
 	data []byte
 	room string
+	sender *connection
 }
 
 type subscription struct {
@@ -60,6 +61,11 @@ func (h *hub) run() {
 		case m := <-h.broadcast:
 			connections := h.rooms[m.room]
 			for c := range connections {
+				// Don't send sender the message back
+				if c == m.sender {
+					continue
+				}
+
 				select {
 				case c.send <- m.data:
 				default:

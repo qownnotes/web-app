@@ -76,7 +76,7 @@ func (s subscription) readPump() {
 			}
 			break
 		}
-		m := message{msg, s.room}
+		m := message{msg, s.room, c}
 
 		log.Printf("Got message: %#v\n", m)
 
