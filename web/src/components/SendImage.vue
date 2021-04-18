@@ -9,6 +9,7 @@
         <v-btn
             :loading="sending"
             :disabled="sending"
+            v-if="currentFile"
             color="blue-grey"
             class="ma-2 white--text"
             fab
