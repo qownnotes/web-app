@@ -8,8 +8,11 @@ class WebSocketService {
 
         this.close();
 
-        // const url = "\"ws://\" + document.location.host + \"/ws\"";
-        const url = "ws://localhost:8080/ws/" + window.token;
+        // Use localhost directly for development to be able to start
+        // a different webserver for the web application
+        const url = document.location.protocol === "http:" ?
+            "ws://localhost:8080/ws/" + window.token :
+            "wss://" + document.location.host + "/ws";
         console.log("Connecting to socket " + url);
 
         window.ws = new WebSocket(url);
