@@ -55,7 +55,7 @@ func (h *hub) run() {
 
 				m := message{[]byte(
 					"{\"command\": \"showWarning\", " +
-					"\"msg\": \"More than 2 connections with this token! Are multiple instances of QOwnNotes active?\"}"),
+					"\"msg\": \"More than 2 connections are using this token! Are multiple instances of QOwnNotes active?\"}"),
 					s.room, nil}
 				sendMessage(m)
 			}

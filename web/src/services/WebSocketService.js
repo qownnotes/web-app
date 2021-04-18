@@ -30,7 +30,16 @@ class WebSocketService {
         }
 
         window.ws.onmessage = (e) => {
-            console.log("Received: " + e.data);
+            const m = JSON.parse(e.data);
+            console.log("Received message", m);
+
+            switch (m.command) {
+                case "showWarning": {
+                    const event = new CustomEvent("warning", { detail: m.msg });
+                    window.dispatchEvent(event);
+                    break;
+                }
+            }
         }
     }
 

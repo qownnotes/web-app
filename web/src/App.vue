@@ -74,8 +74,15 @@
     </v-main>
 
     <v-footer app>
-      <!-- -->
-      footer
+      <v-alert
+          dense
+          type="warning"
+          v-model="showWarning"
+          border="left"
+          dismissible
+      >
+        {{this.warningText}}
+      </v-alert>
     </v-footer>
   </v-app>
 </template>
@@ -93,7 +100,23 @@ export default {
   },
 
   data: () => ({
+    showWarning: false,
+    warningText: "",
     drawer: false,
   }),
+  methods: {
+    handleWarningEvent(e) {
+      console.log("Received warning", e.detail);
+      this.warningText = e.detail;
+      this.showWarning = true;
+      e.stopPropagation();
+    }
+  },
+  mounted() {
+    window.addEventListener("warning", this.handleWarningEvent);
+  },
+  beforeDestroy() {
+    window.removeEventListener("warning", this.handleWarningEvent);
+  }
 };
 </script>
