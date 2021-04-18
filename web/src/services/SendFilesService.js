@@ -1,13 +1,17 @@
 import WebSocketService from "@/services/WebSocketService";
 
 class SendFilesService {
-    send(file) {
+    send(file, retry = 0) {
         if (!window.ws) {
             WebSocketService.init();
         }
 
         if (!WebSocketService.isOpen()) {
-            setTimeout(() => { this.send(file) }, 1000);
+            // try a maximum of 5 times to connect
+            if (retry < 5) {
+                setTimeout(() => { this.send(file, retry++) }, 1000);
+            }
+
             return;
         }
 
