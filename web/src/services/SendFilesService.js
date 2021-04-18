@@ -1,8 +1,12 @@
 class SendFilesService {
-    send(ws, file) {
+    send(file) {
+        if (!window.ws) {
+            return;
+        }
+
         console.log("Send data...");
         console.log(file);
-        ws.send("My data");
+        window.ws.send("My data");
 
     //     console.log("Send file...");
     //     console.log(file);
@@ -23,15 +27,15 @@ class SendFilesService {
     //         }
     //
     //         console.log(data);
-    //         // ws.send(data);
-    //         ws.send(JSON.stringify(data));
+    //         // window.ws.send(data);
+    //         window.ws.send(JSON.stringify(data));
     //
-    //         // ws.close();
+    //         // window.ws.close();
     //         // TODO: Implement an acknowledge answer from the server for every client message
     //     }
     //
     //     reader.readAsDataURL(file);
-    //     // ws.onopen = () => reader.readAsDataURL(file);
+    //     // window.ws.onopen = () => reader.readAsDataURL(file);
     }
 }
 

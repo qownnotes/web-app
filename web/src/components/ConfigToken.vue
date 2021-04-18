@@ -3,6 +3,7 @@
     <v-text-field
         label="Security token"
         :rules="rules"
+        v-model="token"
         @change="change"
         hide-details="auto"
     ></v-text-field>
@@ -10,8 +11,11 @@
 </template>
 
 <script>
+import WebSocketService from "@/services/WebSocketService";
+
 export default {
   data: () => ({
+    token: WebSocketService.readToken(),
     rules: [
       value => !!value || 'You need to enter a token to communicate with your local instance of QOwnNotes!',
       value => (value && value.length >= 10) || 'A minimum of 10 characters are required!',
@@ -24,6 +28,7 @@ export default {
   methods: {
     change (value) {
       console.log(value);
+      WebSocketService.updateToken(value);
     }
   }
 }

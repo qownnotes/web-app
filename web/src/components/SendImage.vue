@@ -31,6 +31,7 @@
 
 <script>
   import SendService from "../services/SendFilesService";
+  import WebSocketService from "@/services/WebSocketService";
 
   // window.onload = function () {
   //   var conn;
@@ -87,7 +88,6 @@
       loader: null,
       sending: false,
       currentFile: false,
-      ws: null,
     }),
     watch: {
       loader () {
@@ -102,7 +102,7 @@
     methods: {
       sendFile () {
         this.sending = true;
-        SendService.send(this.ws, this.currentFile)
+        SendService.send(this.currentFile)
         setTimeout(() => (this.sending = false), 1000)
       },
       selectFile(file) {
@@ -113,29 +113,10 @@
       },
     },
     beforeMount() {
-      // const url = "\"ws://\" + document.location.host + \"/ws\"";
-      const url = "ws://localhost:8080/ws/111";
-      this.ws = new WebSocket(url);
-      this.ws.onopen = () => {
-        console.log("Connected to socket " + url);
-      };
-
-      this.ws.onclose = () => {
-        console.log("Connection is closed...");
-      };
-
-      this.ws.onerror = (e) => {
-        console.error(e.msg);
-      }
-
-      this.ws.onmessage = (e) => {
-        console.log(e.data);
-      }
+      WebSocketService.init();
     },
     beforeDestroy() {
-      if (this.ws) {
-        this.ws.close();
-      }
+      WebSocketService.close();
     }
   }
 </script>
