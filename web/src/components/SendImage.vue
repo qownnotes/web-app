@@ -53,9 +53,13 @@
         setTimeout(() => (this.sending = false), 1000)
       },
       selectFile(file) {
-        this.sending = false;
         this.currentFile = file;
 
+        if (!file) {
+          return;
+        }
+
+        this.sending = false;
         this.sendFile();
       },
     },
