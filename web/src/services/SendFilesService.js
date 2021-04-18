@@ -1,6 +1,13 @@
+import WebSocketService from "@/services/WebSocketService";
+
 class SendFilesService {
     send(file) {
         if (!window.ws) {
+            WebSocketService.init();
+        }
+
+        if (!WebSocketService.isOpen()) {
+            setTimeout(() => { this.send(file) }, 1000);
             return;
         }
 

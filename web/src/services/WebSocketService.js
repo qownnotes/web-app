@@ -10,6 +10,7 @@ class WebSocketService {
 
         // const url = "\"ws://\" + document.location.host + \"/ws\"";
         const url = "ws://localhost:8080/ws/" + window.token;
+        console.log("Connecting to socket " + url);
 
         window.ws = new WebSocket(url);
         window.ws.onopen = () => {
@@ -18,6 +19,7 @@ class WebSocketService {
 
         window.ws.onclose = () => {
             console.log("Connection to socket " + url + " closed");
+            delete window.ws;
         };
 
         window.ws.onerror = (e) => {
@@ -25,13 +27,14 @@ class WebSocketService {
         }
 
         window.ws.onmessage = (e) => {
-            console.log(e.data);
+            console.log("Received: " + e.data);
         }
     }
 
     close() {
         if (window.ws) {
             window.ws.close();
+            delete window.ws;
         }
     }
 
@@ -50,6 +53,10 @@ class WebSocketService {
         window.token = token;
 
         this.init();
+    }
+
+    isOpen() {
+        return window.ws && window.ws.readyState === WebSocket.OPEN;
     }
 }
 
