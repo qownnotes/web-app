@@ -12,7 +12,7 @@ class WebSocketService {
         // a different webserver for the web application
         const url = document.location.protocol === "http:" ?
             "ws://localhost:8080/ws/" + window.token :
-            "wss://" + document.location.host + "/ws";
+            "wss://" + document.location.host + "/ws/" + window.token;
         console.log("Connecting to socket " + url);
 
         window.ws = new WebSocket(url);
