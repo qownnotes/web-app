@@ -78,7 +78,8 @@ func (s subscription) readPump() {
 		}
 		m := message{msg, s.room, c}
 
-		log.Printf("Got message: %#v\n", m)
+		// log.Printf("Got message: %#v\n", m)
+		log.Printf("Got message in room %v", s.room)
 
 		h.broadcast <- m
 	}
@@ -119,7 +120,7 @@ func (s *subscription) writePump() {
 // serveWs handles websocket requests from the peer.
 func serveWs(w http.ResponseWriter, r *http.Request, room string) {
 	ws, err := upgrader.Upgrade(w, r, nil)
-	log.Println(room)
+
 	if err != nil {
 		log.Println(err)
 		return
