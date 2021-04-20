@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
+    "vue-matomo": "^3.14.0-0",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

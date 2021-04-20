@@ -1,9 +1,16 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
+import VueMatomo from "vue-matomo";
 import './registerServiceWorker'
 
 Vue.config.productionTip = false
+
+Vue.use(VueMatomo, {
+  host: "https://p.bekerle.com",
+  siteId: 8,
+  enableHeartBeatTimer: true,
+});
 
 new Vue({
   vuetify,
