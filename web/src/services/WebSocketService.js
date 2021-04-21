@@ -63,6 +63,7 @@ class WebSocketService {
 
         window.localStorage.setItem("token", token);
         window.token = token;
+        window._paq.push(['trackEvent', 'Config', 'UpdateToken']);
 
         this.init();
     }

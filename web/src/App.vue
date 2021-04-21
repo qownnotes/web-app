@@ -104,6 +104,7 @@ export default {
   },
   mounted() {
     window.addEventListener("warning", this.handleWarningEvent);
+    window._paq.push(['trackPageView']);
   },
   beforeDestroy() {
     window.removeEventListener("warning", this.handleWarningEvent);

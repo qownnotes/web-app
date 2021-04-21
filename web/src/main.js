@@ -6,6 +6,7 @@ import './registerServiceWorker'
 
 Vue.config.productionTip = false
 
+// https://www.npmjs.com/package/vue-matomo
 Vue.use(VueMatomo, {
   host: "https://p.bekerle.com",
   siteId: 8,

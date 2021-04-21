@@ -20,6 +20,8 @@ class SendFilesService {
         // window.ws.send("My data");
 
         console.log("Send file", file);
+        // https://matomo.org/docs/event-tracking/
+        window._paq.push(['trackEvent', 'File', 'SendFile', file.size]);
         let reader = new FileReader();
 
         reader.onerror = () => {
