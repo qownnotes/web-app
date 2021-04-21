@@ -39,6 +39,11 @@ class WebSocketService {
                     window.dispatchEvent(event);
                     break;
                 }
+                case "confirmInsert": {
+                    const event = new CustomEvent("insert-confirmed");
+                    window.dispatchEvent(event);
+                    break;
+                }
             }
         }
     }

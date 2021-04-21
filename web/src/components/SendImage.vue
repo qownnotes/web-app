@@ -35,6 +35,7 @@
       loader: null,
       sending: false,
       currentFile: false,
+      insertConfirmationTimeoutTimer: null
     }),
     watch: {
       loader () {
@@ -50,7 +51,13 @@
       sendFile () {
         this.sending = true;
         SendService.send(this.currentFile)
-        setTimeout(() => (this.sending = false), 1000)
+        this.insertConfirmationTimeoutTimer = setTimeout(() => {
+          this.sending = false;
+          const event = new CustomEvent("warning", {
+            detail: "We did not get a file insert confirmation after 15sec. " +
+                "Is the QOwnNotes desktop application running and using the same security token?" });
+          window.dispatchEvent(event);
+        }, 15000)
       },
       selectFile(file) {
         this.currentFile = file;
@@ -62,6 +69,12 @@
         this.sending = false;
         this.sendFile();
       },
+    },
+    mounted() {
+      window.addEventListener("insert-confirmed", () => {
+        clearTimeout(this.insertConfirmationTimeoutTimer);
+        this.sending = false;
+      });
     },
     beforeMount() {
       WebSocketService.init();
