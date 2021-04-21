@@ -32,7 +32,9 @@ class SendFilesService {
             console.log(e.target.result);
             const data = {
                 "command": "insertFile",
-                "file": e.target.result
+                "file": e.target.result,
+                "size": file.size,
+                "name": file.name
             }
 
             window.ws.send(JSON.stringify(data));
