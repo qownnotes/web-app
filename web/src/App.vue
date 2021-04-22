@@ -50,7 +50,7 @@
             width="40"
         />
 
-        QOwnNotes
+        QOwnNotes Web App
       </div>
     </v-app-bar>
 
@@ -58,6 +58,7 @@
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid>
+        <Intro/>
         <ConfigToken/>
         <SendImage/>
       </v-container>
@@ -80,6 +81,7 @@
 <script>
 import SendImage from "@/components/SendImage";
 import ConfigToken from "@/components/ConfigToken";
+import Intro from "@/components/Intro";
 
 export default {
   name: 'App',
@@ -87,6 +89,7 @@ export default {
   components: {
     ConfigToken,
     SendImage,
+    Intro,
   },
 
   data: () => ({
