@@ -21,7 +21,7 @@ class SendFilesService {
 
         console.log("Send file", file);
         // https://matomo.org/docs/event-tracking/
-        window._paq.push(['trackEvent', 'File', 'SendFile', file.size]);
+        window._paq.push(['trackEvent', 'File', 'SendFile', 'Size', file.size]);
         let reader = new FileReader();
 
         reader.onerror = () => {
@@ -38,8 +38,6 @@ class SendFilesService {
             }
 
             window.ws.send(JSON.stringify(data));
-
-            // TODO: Implement an acknowledge answer from the server for every client message
         }
 
         reader.readAsDataURL(file);
