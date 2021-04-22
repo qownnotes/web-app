@@ -1,13 +1,18 @@
 <template>
   <v-container>
     <v-text-field
-        label="Security token"
         :rules="rules"
         v-model="token"
         @change="change"
         hide-details="auto"
         type="password"
-    ></v-text-field>
+    >
+      <template v-slot:label>
+        <div>
+          Security token <small>(use the same in your desktop app)</small>
+        </div>
+      </template>
+    </v-text-field>
   </v-container>
 </template>
 
