@@ -60,6 +60,7 @@
       <v-container fluid>
         <Intro/>
         <ConfigToken/>
+        <ImagePicker/>
         <SendImage/>
       </v-container>
     </v-main>
@@ -82,11 +83,13 @@
 import SendImage from "@/components/SendImage";
 import ConfigToken from "@/components/ConfigToken";
 import Intro from "@/components/Intro";
+import ImagePicker from "@/components/ImagePicker";
 
 export default {
   name: 'App',
 
   components: {
+    ImagePicker,
     ConfigToken,
     SendImage,
     Intro,
