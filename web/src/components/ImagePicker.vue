@@ -3,10 +3,9 @@
     <croppa
         v-model="croppa"
         placeholder="Take or select photo"
-        :width="320"
-        :height="320"
         :placeholder-font-size="16"
-        :prevent-white-space="false"
+        :prevent-white-space="true"
+        auto-sizing
         initial-size="cover"
         :show-remove-button="false"
         @new-image="onImageLoaded"
@@ -38,6 +37,14 @@
     </v-layout>
   </v-container>
 </template>
+
+<style>
+.croppa-container {
+  height: 500px;
+  margin: 50px auto;
+  display: block;
+}
+</style>
 
 <script>
 export default {
