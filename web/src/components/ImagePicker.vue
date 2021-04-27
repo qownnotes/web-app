@@ -1,16 +1,15 @@
 <template>
   <v-container>
-    <croppa
-        v-model="croppa"
-        placeholder="Take or select photo"
-        :placeholder-font-size="16"
-        :prevent-white-space="true"
-        auto-sizing
-        initial-size="cover"
-        :show-remove-button="false"
-        @new-image="onImageLoaded"
-        @image-remove="onImageRemoved"
-    ></croppa>
+    <img
+        ref="image"
+        :src="imageSrc"
+        @loadstart="onImageLoaded"
+        @load="onImageLoaded"
+        alt="" />
+    <v-file-input
+        @change="selectFile"
+        label="Take or select photo"
+    ></v-file-input>
     <v-layout v-if="showTools">
       <v-btn
           class="mx-2"
@@ -39,42 +38,85 @@
 </template>
 
 <style>
-.croppa-container {
-  height: 500px;
-  margin: 50px auto;
+img {
   display: block;
+  max-width: 100%;
 }
 </style>
 
 <script>
+import Cropper from 'cropperjs';
+
 export default {
   data: () => ({
-    croppa: null,
+    imageSrc: "",
+    // imageSrc: "/img/icons/apple-touch-icon.png",
     showTools: false
   }),
   methods: {
     onImageLoaded() {
+      console.log("onImageLoaded");
       this.showTools = true;
-      const event = new CustomEvent("image-loaded");
-      window.dispatchEvent(event);
+
+      this.cropper = new Cropper(this.$refs.image, {
+        autoCrop: false,
+        dragMode: 'move',
+        background: false,
+        crop(event) {
+          console.log(event.detail.x);
+          console.log(event.detail.y);
+          console.log(event.detail.width);
+          console.log(event.detail.height);
+          console.log(event.detail.rotate);
+          console.log(event.detail.scaleX);
+          console.log(event.detail.scaleY);
+        },
+      });
+
+      // const event = new CustomEvent("image-loaded");
+      // window.dispatchEvent(event);
     },
     onImageRemoved() {
       this.showTools = false;
       const event = new CustomEvent("image-removed");
       window.dispatchEvent(event);
+    },
+    selectFile(file) {
+      this.currentFile = file;
+
+      // console.log(file.url);
+
+      if (!file) {
+        return;
+      }
+
+      let reader = new FileReader();
+
+      reader.onerror = () => {
+        console.error("Reader error", reader.error);
+      };
+
+      reader.onload = (e) => {
+        this.imageSrc = e.target.result;
+      }
+
+      reader.readAsDataURL(file);
+
+
+      // this.sending = false;
+      // this.sendFile();
     }
   },
   mounted() {
-    window.addEventListener("retrieve-image", () => {
-      this.croppa.generateBlob((file) => {
-        console.log(file);
-
-        const event = new CustomEvent("send-retrieved-file");
-        window.file = file;
-        window.dispatchEvent(event);
-      }, "image/jpeg");
-
-    });
+    // window.addEventListener("retrieve-image", () => {
+    //   this.croppa.generateBlob((file) => {
+    //     console.log(file);
+    //
+    //     const event = new CustomEvent("send-retrieved-file");
+    //     window.file = file;
+    //     window.dispatchEvent(event);
+    //   }, "image/jpeg");
+    // });
   }
 }
 </script>
