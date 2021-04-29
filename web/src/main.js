@@ -3,6 +3,7 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import VueMatomo from "vue-matomo";
 import './registerServiceWorker'
+import 'cropperjs/dist/cropper.css';
 
 Vue.config.productionTip = false
 

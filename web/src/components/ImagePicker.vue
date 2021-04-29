@@ -16,21 +16,10 @@
           fab
           small
           color="primary"
-          @click="croppa.rotate(-1)"
+          @click="cropper.rotate(-90)"
       >
         <v-icon dark>
           mdi-format-rotate-90
-        </v-icon>
-      </v-btn>
-      <v-btn
-          class="mx-2"
-          fab
-          small
-          color="primary"
-          @click="croppa.chooseFile()"
-      >
-        <v-icon dark>
-          mdi-folder-image
         </v-icon>
       </v-btn>
     </v-layout>
@@ -51,7 +40,8 @@ export default {
   data: () => ({
     imageSrc: "",
     // imageSrc: "/img/icons/apple-touch-icon.png",
-    showTools: false
+    showTools: false,
+    cropper: null
   }),
   methods: {
     onImageLoaded() {
@@ -73,8 +63,8 @@ export default {
         },
       });
 
-      // const event = new CustomEvent("image-loaded");
-      // window.dispatchEvent(event);
+      const event = new CustomEvent("image-loaded");
+      window.dispatchEvent(event);
     },
     onImageRemoved() {
       this.showTools = false;
@@ -108,15 +98,17 @@ export default {
     }
   },
   mounted() {
-    // window.addEventListener("retrieve-image", () => {
-    //   this.croppa.generateBlob((file) => {
+    window.addEventListener("retrieve-image", () => {
+      const imageData = this.cropper.getImageData();
+      console.log(imageData);
+    //   this.cropper.getImageData((file) => {
     //     console.log(file);
     //
     //     const event = new CustomEvent("send-retrieved-file");
     //     window.file = file;
     //     window.dispatchEvent(event);
     //   }, "image/jpeg");
-    // });
+    });
   }
 }
 </script>
