@@ -6,6 +6,7 @@
         src="" />
     <v-file-input
         @change="selectFile"
+        accept="image/*"
         label="Take or select photo"
         show-size
     ></v-file-input>
