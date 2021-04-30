@@ -7,6 +7,7 @@
     <v-file-input
         @change="selectFile"
         label="Take or select photo"
+        show-size
     ></v-file-input>
     <v-layout v-if="showTools">
       <v-btn
@@ -58,6 +59,15 @@ export default {
   methods: {
     onImageRemoved() {
       this.showTools = false;
+
+      if (this.cropper) {
+        this.cropper.destroy();
+        this.cropper = null;
+      }
+
+      this.$refs.image.alt = "";
+      this.$refs.image.src = "";
+
       const event = new CustomEvent("image-removed");
       window.dispatchEvent(event);
     },
@@ -92,6 +102,7 @@ export default {
     },
     selectFile(file) {
       this.currentFile = file;
+      this.onImageRemoved();
 
       if (!file) {
         return;
