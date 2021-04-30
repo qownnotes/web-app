@@ -57,7 +57,7 @@ export default {
     data: {}
   }),
   methods: {
-    onImageRemoved() {
+    removeImage() {
       this.showTools = false;
 
       if (this.cropper) {
@@ -102,7 +102,7 @@ export default {
     },
     selectFile(file) {
       this.currentFile = file;
-      this.onImageRemoved();
+      this.removeImage();
 
       if (!file) {
         return;
