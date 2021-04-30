@@ -2,10 +2,8 @@
   <v-container>
     <img
         ref="image"
-        :src="imageSrc"
-        @loadstart="onImageLoaded"
-        @load="onImageLoaded"
-        alt="" />
+        :alt="image.name"
+        src="" />
     <v-file-input
         @change="selectFile"
         label="Take or select photo"
@@ -16,10 +14,23 @@
           fab
           small
           color="primary"
-          @click="cropper.rotate(-90)"
+          title="Rotate Left"
+          @click="clickTool('rotate-left')"
       >
         <v-icon dark>
-          mdi-format-rotate-90
+          mdi-rotate-left
+        </v-icon>
+      </v-btn>
+      <v-btn
+          class="mx-2"
+          fab
+          small
+          color="primary"
+          title="Rotate Right"
+          @click="clickTool('rotate-right')"
+      >
+        <v-icon dark>
+          mdi-rotate-right
         </v-icon>
       </v-btn>
     </v-layout>
@@ -38,60 +49,84 @@ import Cropper from 'cropperjs';
 
 export default {
   data: () => ({
-    imageSrc: "",
-    // imageSrc: "/img/icons/apple-touch-icon.png",
+    image: {},
+    // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
-    cropper: null
+    cropper: null,
+    data: {}
   }),
   methods: {
-    onImageLoaded() {
-      console.log("onImageLoaded");
-      this.showTools = true;
-
-      this.cropper = new Cropper(this.$refs.image, {
-        autoCrop: false,
-        dragMode: 'move',
-        background: false,
-        crop(event) {
-          console.log(event.detail.x);
-          console.log(event.detail.y);
-          console.log(event.detail.width);
-          console.log(event.detail.height);
-          console.log(event.detail.rotate);
-          console.log(event.detail.scaleX);
-          console.log(event.detail.scaleY);
-        },
-      });
-
-      const event = new CustomEvent("image-loaded");
-      window.dispatchEvent(event);
-    },
     onImageRemoved() {
       this.showTools = false;
       const event = new CustomEvent("image-removed");
       window.dispatchEvent(event);
     },
+    clickTool(action) {
+      const { cropper } = this;
+      console.log(action);
+      switch (action) {
+        case 'move':
+        case 'crop':
+          cropper.setDragMode(action);
+          break;
+        case 'zoom-in':
+          cropper.zoom(0.1);
+          break;
+        case 'zoom-out':
+          cropper.zoom(-0.1);
+          break;
+        case 'rotate-left':
+          cropper.rotate(-90);
+          break;
+        case 'rotate-right':
+          cropper.rotate(90);
+          break;
+        case 'flip-horizontal':
+          cropper.scaleX(-cropper.getData().scaleX || -1);
+          break;
+        case 'flip-vertical':
+          cropper.scaleY(-cropper.getData().scaleY || -1);
+          break;
+        default:
+      }
+    },
     selectFile(file) {
       this.currentFile = file;
-
-      // console.log(file.url);
 
       if (!file) {
         return;
       }
 
-      let reader = new FileReader();
-
-      reader.onerror = () => {
-        console.error("Reader error", reader.error);
-      };
-
-      reader.onload = (e) => {
-        this.imageSrc = e.target.result;
+      this.image = {
+        name: file.name,
+        type: file.type,
+        url: URL.createObjectURL(file)
       }
 
-      reader.readAsDataURL(file);
+      // this is crucial, "src" must be set this way for cropper to work
+      this.$refs.image.src = this.image.url;
 
+      this.cropper = new Cropper(this.$refs.image, {
+        autoCrop: false,
+        dragMode: 'move',
+        background: false,
+        // crop(event) {
+        //   console.log(event.detail.x);
+        //   console.log(event.detail.y);
+        //   console.log(event.detail.width);
+        //   console.log(event.detail.height);
+        //   console.log(event.detail.rotate);
+        //   console.log(event.detail.scaleX);
+        //   console.log(event.detail.scaleY);
+        // },
+        ready: () => {
+          console.log("ready");
+          this.showTools = true;
+
+          const event = new CustomEvent("image-loaded");
+          window.dispatchEvent(event);
+        },
+      });
 
       // this.sending = false;
       // this.sendFile();
@@ -99,15 +134,16 @@ export default {
   },
   mounted() {
     window.addEventListener("retrieve-image", () => {
-      const imageData = this.cropper.getImageData();
-      console.log(imageData);
-    //   this.cropper.getImageData((file) => {
-    //     console.log(file);
-    //
-    //     const event = new CustomEvent("send-retrieved-file");
-    //     window.file = file;
-    //     window.dispatchEvent(event);
-    //   }, "image/jpeg");
+      // const dataUrl = this.cropper.getCroppedCanvas().toDataURL(this.image.type);
+      // console.log(dataUrl);
+
+      this.cropper.getCroppedCanvas().toBlob((blob) => {
+        blob.name = this.image.name;
+
+        const event = new CustomEvent("send-retrieved-file");
+        window.file = blob;
+        window.dispatchEvent(event);
+      });
     });
   }
 }
