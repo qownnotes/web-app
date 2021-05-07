@@ -13,27 +13,38 @@
     <v-row v-if="showTools">
       <v-col
           cols="12"
-          sm="6"
+          sm="4"
       >
         <v-text-field
             v-model="maxWidth"
             type="number"
-            label="Max. Width"
+            label="Max. width"
             suffix="px"
             @change="storeMaxWidth"
         ></v-text-field>
       </v-col>
       <v-col
           cols="12"
-          sm="6"
+          sm="4"
       >
         <v-text-field
             v-model="maxHeight"
             type="number"
-            label="Max. Height"
+            label="Max. height"
             suffix="px"
             @change="storeMaxHeight"
         ></v-text-field>
+      </v-col>
+      <v-col
+          cols="12"
+          sm="4"
+      >
+        <v-combobox
+            v-model="imageFormat"
+            :items="imageFormats"
+            label="Output image format"
+            @change="storeImageFormat"
+        ></v-combobox>
       </v-col>
     </v-row>
     <v-layout v-if="showTools">
@@ -80,6 +91,8 @@ export default {
   data: () => ({
     originalFile: null,
     image: {},
+    imageFormat: window.localStorage.getItem("imageFormat") || 'jpeg',
+    imageFormats: ['jpeg', 'png'],
     // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
     cropper: null,
@@ -188,11 +201,18 @@ export default {
      * @returns {boolean}
      */
     isImageModified() {
+      // check if image formats match
+      if (!this.originalFile.type.includes(this.imageFormat)) {
+        return true;
+      }
+
+      // check if image size needs to be adapted
       const imageData = this.cropper.getImageData();
       if (imageData.naturalHeight > this.maxHeight || imageData.naturalWidth > this.maxWidth) {
         return true;
       }
 
+      // check if image needs to be rotated
       const data = this.cropper.getData();
 
       return (data.rotate || 0) !== 0;
@@ -202,6 +222,9 @@ export default {
     },
     storeMaxHeight(value) {
       window.localStorage.setItem("maxHeight", value);
+    },
+    storeImageFormat(value) {
+      window.localStorage.setItem("imageFormat", value);
     }
   },
   mounted() {
@@ -215,7 +238,7 @@ export default {
         }).toBlob((blob) => {
           blob.name = this.image.name;
           this.sendImageFile(blob);
-        });
+        }, 'image/' + this.imageFormat);
       } else {
         // send the original image
         this.sendImageFile(this.originalFile);
