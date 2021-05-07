@@ -43,7 +43,7 @@
 img {
   display: block;
   max-width: 100%;
-  max-height: 50vh;
+  max-height: 30vh;
 }
 </style>
 
