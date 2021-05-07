@@ -1,5 +1,9 @@
 # QOwnNotes Web App Changelog
 
+## 0.1.9
+
+- The form elements in the mobile layout were improved 
+
 ## 0.1.8
 
 - You can now set the maximum image height and width

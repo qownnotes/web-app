@@ -12,7 +12,7 @@
     ></v-file-input>
     <v-row v-if="showTools">
       <v-col
-          cols="12"
+          cols="6"
           sm="4"
       >
         <v-text-field
@@ -24,7 +24,7 @@
         ></v-text-field>
       </v-col>
       <v-col
-          cols="12"
+          cols="6"
           sm="4"
       >
         <v-text-field
@@ -36,7 +36,7 @@
         ></v-text-field>
       </v-col>
       <v-col
-          cols="12"
+          cols="6"
           sm="4"
       >
         <v-combobox
