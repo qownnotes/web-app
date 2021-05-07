@@ -43,6 +43,7 @@
 img {
   display: block;
   max-width: 100%;
+  max-height: 50vh;
 }
 </style>
 
@@ -51,6 +52,7 @@ import Cropper from 'cropperjs';
 
 export default {
   data: () => ({
+    originalFile: null,
     image: {},
     // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
@@ -102,7 +104,7 @@ export default {
       }
     },
     selectFile(file) {
-      this.currentFile = file;
+      this.originalFile = file;
       this.removeImage();
 
       if (!file) {
@@ -142,20 +144,39 @@ export default {
 
       // this.sending = false;
       // this.sendFile();
+    },
+    /**
+     * Send the image file as event
+     */
+    sendImageFile(file) {
+      window.file = file;
+      const event = new CustomEvent("send-retrieved-file");
+      window.dispatchEvent(event);
+    },
+    /**
+     * Checks if the image was modified
+     *
+     * @returns {boolean}
+     */
+    isImageModified() {
+      const data = this.cropper.getData();
+
+      return (data.rotate || 0) !== 0;
     }
   },
   mounted() {
+    // send image if image sending was requested
     window.addEventListener("retrieve-image", () => {
-      // const dataUrl = this.cropper.getCroppedCanvas().toDataURL(this.image.type);
-      // console.log(dataUrl);
-
-      this.cropper.getCroppedCanvas().toBlob((blob) => {
-        blob.name = this.image.name;
-
-        const event = new CustomEvent("send-retrieved-file");
-        window.file = blob;
-        window.dispatchEvent(event);
-      });
+      if (this.isImageModified()) {
+        // send the image from Cropper is it was modified
+        this.cropper.getCroppedCanvas().toBlob((blob) => {
+          blob.name = this.image.name;
+          this.sendImageFile(blob);
+        });
+      } else {
+        // send the original image
+        this.sendImageFile(this.originalFile);
+      }
     });
   }
 }
