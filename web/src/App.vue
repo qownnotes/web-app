@@ -113,6 +113,8 @@ export default {
   mounted() {
     window.addEventListener("warning", this.handleWarningEvent);
     window._paq.push(['trackPageView']);
+    window._paq.push(['setCustomDimension', 1, version]);
+    window._paq.push(['setCustomDimension', 2, process.env.NODE_ENV]);
   },
   beforeDestroy() {
     window.removeEventListener("warning", this.handleWarningEvent);

@@ -76,6 +76,7 @@ export default {
     },
     clickTool(action) {
       const { cropper } = this;
+      window._paq.push(['trackEvent', 'Image', 'ToolAction', action]);
       console.log(action);
       switch (action) {
         case 'move':
@@ -136,6 +137,7 @@ export default {
         ready: () => {
           console.log("ready");
           this.showTools = true;
+          window._paq.push(['trackEvent', 'Image', 'Loaded', file.size]);
 
           const event = new CustomEvent("image-loaded");
           window.dispatchEvent(event);
