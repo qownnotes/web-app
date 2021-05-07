@@ -20,8 +20,8 @@ const (
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	// 10MB maximum message size allowed from peer.
-	maxMessageSize = 10485760
+	// 20MB maximum message size allowed from peer.
+	maxMessageSize = 20971520
 )
 
 var upgrader = websocket.Upgrader{
