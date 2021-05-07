@@ -11,7 +11,7 @@ module.exports = {
     'vuetify'
   ],
   pwa: {
-    themeColor: "#130f40",
+    themeColor: "#1d235f",
     msTileColor: "#130f40",
     name: "QOwnNotes Web App",
     // workboxOptions: {
