@@ -10,6 +10,32 @@
         label="Take or select photo"
         show-size
     ></v-file-input>
+    <v-row v-if="showTools">
+      <v-col
+          cols="12"
+          sm="6"
+      >
+        <v-text-field
+            v-model="maxWidth"
+            type="number"
+            label="Max. Width"
+            suffix="px"
+            @change="storeMaxWidth"
+        ></v-text-field>
+      </v-col>
+      <v-col
+          cols="12"
+          sm="6"
+      >
+        <v-text-field
+            v-model="maxHeight"
+            type="number"
+            label="Max. Height"
+            suffix="px"
+            @change="storeMaxHeight"
+        ></v-text-field>
+      </v-col>
+    </v-row>
     <v-layout v-if="showTools">
       <v-btn
           class="mx-2"
@@ -57,7 +83,8 @@ export default {
     // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
     cropper: null,
-    data: {}
+    maxWidth: window.localStorage.getItem("maxWidth") || 5120,
+    maxHeight: window.localStorage.getItem("maxHeight") || 5120,
   }),
   methods: {
     removeImage() {
@@ -161,9 +188,20 @@ export default {
      * @returns {boolean}
      */
     isImageModified() {
+      const imageData = this.cropper.getImageData();
+      if (imageData.naturalHeight > this.maxHeight || imageData.naturalWidth > this.maxWidth) {
+        return true;
+      }
+
       const data = this.cropper.getData();
 
       return (data.rotate || 0) !== 0;
+    },
+    storeMaxWidth(value) {
+      window.localStorage.setItem("maxWidth", value);
+    },
+    storeMaxHeight(value) {
+      window.localStorage.setItem("maxHeight", value);
     }
   },
   mounted() {
@@ -171,7 +209,10 @@ export default {
     window.addEventListener("retrieve-image", () => {
       if (this.isImageModified()) {
         // send the image from Cropper is it was modified
-        this.cropper.getCroppedCanvas().toBlob((blob) => {
+        this.cropper.getCroppedCanvas({
+          maxWidth: this.maxWidth,
+          maxHeight: this.maxHeight,
+        }).toBlob((blob) => {
           blob.name = this.image.name;
           this.sendImageFile(blob);
         });
