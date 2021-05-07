@@ -14,9 +14,9 @@ module.exports = {
     themeColor: "#130f40",
     msTileColor: "#130f40",
     name: "QOwnNotes Web App",
-    workboxOptions: {
-      skipWaiting: true
-    },
+    // workboxOptions: {
+    //   skipWaiting: true
+    // },
     manifestOptions: {
       "icons": [
         {
