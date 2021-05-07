@@ -50,7 +50,7 @@
             width="40"
         />
 
-        QOwnNotes Web App
+        QOwnNotes Web App v{{version}}
       </div>
     </v-app-bar>
 
@@ -84,6 +84,7 @@ import SendImage from "@/components/SendImage";
 import ConfigToken from "@/components/ConfigToken";
 import Intro from "@/components/Intro";
 import ImagePicker from "@/components/ImagePicker";
+import {version} from '../package'
 
 export default {
   name: 'App',
@@ -99,6 +100,7 @@ export default {
     showWarning: false,
     warningText: "",
     drawer: false,
+    version: version
   }),
   methods: {
     handleWarningEvent(e) {
