@@ -1,5 +1,7 @@
 # QOwnNotes Web App
 
+[Changelog](CHANGELOG.md)
+
 ## Project setup
 
 ```shell
