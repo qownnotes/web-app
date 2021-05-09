@@ -1,6 +1,6 @@
 {
   "name": "qownnotes-web-app",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "cropperjs": "^1.5.11",
+    "heic2any": "^0.0.3",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-matomo": "^3.14.0-0",

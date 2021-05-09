@@ -6,6 +6,7 @@
         src="" />
     <v-file-input
         @change="selectFile"
+        :loading="isFileLoading"
         accept="image/*"
         label="Take or select photo"
         show-size
@@ -86,10 +87,12 @@ img {
 
 <script>
 import Cropper from 'cropperjs';
+import heic2any from "heic2any";
 
 export default {
   data: () => ({
     originalFile: null,
+    isFileLoading: false,
     image: {},
     imageFormat: window.localStorage.getItem("imageFormat") || 'jpeg',
     imageFormats: ['jpeg', 'png'],
@@ -144,13 +147,25 @@ export default {
         default:
       }
     },
-    selectFile(file) {
-      this.originalFile = file;
-      this.removeImage();
-
+    async selectFile(file) {
       if (!file) {
         return;
       }
+
+      this.isFileLoading = true;
+
+      // convert heic/heif to jpg
+      if (file.type === "image/heif") {
+        const fileName = file.name;
+        file = await heic2any({
+          blob: file,
+          toType: "image/jpeg"
+        });
+        file.name = fileName + '.jpg';
+      }
+
+      this.originalFile = file;
+      this.removeImage();
 
       this.image = {
         name: file.name,
@@ -183,6 +198,8 @@ export default {
           window.dispatchEvent(event);
         },
       });
+
+      this.isFileLoading = false;
 
       // this.sending = false;
       // this.sendFile();

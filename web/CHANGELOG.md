@@ -1,5 +1,9 @@
 # QOwnNotes Web App Changelog
 
+## 0.1.10
+
+- Heic/Heif images can now also be loaded by converting them to JPG images 
+
 ## 0.1.9
 
 - The form elements in the mobile layout were improved 
