@@ -155,7 +155,7 @@ export default {
       this.isFileLoading = true;
 
       // convert heic/heif to jpg
-      if (file.type === "image/heif") {
+      if (file.type === "image/heic" || file.type === "image/heif") {
         const fileName = file.name;
         file = await heic2any({
           blob: file,
