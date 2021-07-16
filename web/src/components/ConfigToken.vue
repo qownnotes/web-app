@@ -49,7 +49,7 @@ export default {
   }),
   methods: {
     change (value) {
-      console.log(value);
+      console.debug(value);
       WebSocketService.updateToken(value);
     },
     showQRCode () {

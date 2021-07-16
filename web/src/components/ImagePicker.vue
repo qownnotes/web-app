@@ -120,7 +120,7 @@ export default {
     clickTool(action) {
       const { cropper } = this;
       window._paq.push(['trackEvent', 'Image', 'ToolAction', action]);
-      console.log(action);
+      console.debug(action);
       switch (action) {
         case 'move':
         case 'crop':
@@ -181,16 +181,16 @@ export default {
         dragMode: 'move',
         background: false,
         // crop(event) {
-        //   console.log(event.detail.x);
-        //   console.log(event.detail.y);
-        //   console.log(event.detail.width);
-        //   console.log(event.detail.height);
-        //   console.log(event.detail.rotate);
-        //   console.log(event.detail.scaleX);
-        //   console.log(event.detail.scaleY);
+        //   console.debug(event.detail.x);
+        //   console.debug(event.detail.y);
+        //   console.debug(event.detail.width);
+        //   console.debug(event.detail.height);
+        //   console.debug(event.detail.rotate);
+        //   console.debug(event.detail.scaleX);
+        //   console.debug(event.detail.scaleY);
         // },
         ready: () => {
-          console.log("ready");
+          console.debug("ready");
           this.showTools = true;
           window._paq.push(['trackEvent', 'Image', 'Loaded', file.size]);
 

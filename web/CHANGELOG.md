@@ -3,7 +3,8 @@
 ## 0.1.11
 
 - You are now able to view the token
-- You can now scan the token from a QR code in the settings dialog of QOwnNotes 21.7.6 or newer 
+- You can now scan the token from a QR code in the settings dialog of QOwnNotes 21.7.6 or newer
+- All `console.log` commands are now `console.debug`
 
 ## 0.1.10
 
