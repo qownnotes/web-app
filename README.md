@@ -16,3 +16,17 @@ make all && ./bin/server
 ```
 
 You can now open a browser at <http://localhost:8080/>.
+
+## Docker Compose
+
+You can use this `docker-compose.yml` example to run a container with the docker image:
+
+```yml
+version: "3.1"
+
+services:
+  web-app:
+    image: pbeke/qownnotes-web-app
+    ports:
+      - "8080:8080"
+```
