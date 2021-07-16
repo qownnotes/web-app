@@ -1,5 +1,10 @@
 # QOwnNotes Web App Changelog
 
+## 0.1.11
+
+- You are now able to view the token
+- You can now scan the token from a QR code in the settings dialog of QOwnNotes 21.7.6 or newer 
+
 ## 0.1.10
 
 - Heic/Heif images can now also be loaded by converting them to JPG images 
