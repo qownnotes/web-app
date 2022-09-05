@@ -1,14 +1,19 @@
 # QOwnNotes Web App
 
+[Online](https://app.qownnotes.org/) |
 [QOwnNotes](https://www.qownnotes.org "QOwnNotes Official Site") |
-[QOwnNotes Web App](https://app.qownnotes.org/) |
-[QOwnNotes Web App documentation](https://www.qownnotes.org/getting-started/web-app.html) |
+[Documentation](https://www.qownnotes.org/getting-started/web-app.html) |
 [Docker image](https://hub.docker.com/repository/docker/pbeke/qownnotes-web-app) |
 [Web Changelog](web/CHANGELOG.md)
 
 [![Build](https://github.com/qownnotes/web-app/actions/workflows/build.yml/badge.svg)](https://github.com/qownnotes/web-app/actions/workflows/build.yml)
 
-With the QOwnNotes Web App you are able to take photos from your smartphone and insert it into your current note in QOwnNotes.
+With the QOwnNotes Web App you are able to take photos from your smartphone and insert it into your current note in
+[QOwnNotes](https://www.qownnotes.org "QOwnNotes Official Site").
+
+## Screenshot
+
+![Screenshot](screenshot.png)
 
 ## Build and run
 
