@@ -2,6 +2,7 @@
 
 [QOwnNotes](https://www.qownnotes.org "QOwnNotes Official Site") |
 [QOwnNotes Web App](https://app.qownnotes.org/) |
+[QOwnNotes Web App documentation](https://www.qownnotes.org/getting-started/web-app.html) |
 [Docker image](https://hub.docker.com/repository/docker/pbeke/qownnotes-web-app) |
 [Web Changelog](web/CHANGELOG.md)
 
