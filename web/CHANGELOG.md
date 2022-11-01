@@ -1,5 +1,8 @@
 # QOwnNotes Web App Changelog
 
+## 0.1.12
+- Update dependencies
+
 ## 0.1.11
 
 - You are now able to view the token
