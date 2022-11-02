@@ -7,11 +7,11 @@ WORKDIR /build
 RUN go build -o server
 
 # Build vue.js app
-FROM node:lts-alpine as node
+FROM node:18-alpine as node
 COPY ./web /build
 WORKDIR /build
 RUN npm install
-RUN npm run build
+RUN export NODE_OPTIONS=--openssl-legacy-provider; npm run build
 
 # Create container to serve the app
 FROM alpine
