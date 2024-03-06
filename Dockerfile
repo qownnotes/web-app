@@ -7,7 +7,7 @@ WORKDIR /build
 RUN go build -o server
 
 # Build vue.js app
-FROM node:18-alpine as node
+FROM node:18 as node
 COPY ./web /build
 WORKDIR /build
 RUN npm install
