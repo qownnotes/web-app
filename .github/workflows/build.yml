@@ -10,21 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - name: ⚙️ Install Nix
+        uses: cachix/install-nix-action@v31
         with:
-          go-version: 1.16
-
-      - name: Build go app
-        run: make all
-
-      - name: Build web app
-        run: |
-          cd web
-          npm install
-          NODE_OPTIONS=--openssl-legacy-provider npm run build
-
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: 🔧 Install devenv.sh
+        run: nix profile add nixpkgs#devenv
+      - name: 🧰 Checkout code
+        uses: actions/checkout@v5
+      - name: 🚧 Build nix package
+        run: devenv shell just build
+      - name: 🌐 Build web app
+        run: devenv shell just build-web
 #    - name: Test
 #      run: go test -v ./...

@@ -20,6 +20,9 @@ build:
 clean:
     rm bin -Rf
 
+build-web:
+    cd web && npm install && NODE_OPTIONS=--openssl-legacy-provider npm run build
+
 # Apply the patch to the project repository
 [group('patch')]
 git-apply-patch:
