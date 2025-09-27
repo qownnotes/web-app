@@ -18,7 +18,7 @@ jobs:
         run: nix profile add nixpkgs#devenv
       - name: 🧰 Checkout code
         uses: actions/checkout@v5
-      - name: 🚧 Build nix package
+      - name: 🚧 Build go backend
         run: devenv shell just build
       - name: 🌐 Build web app
         run: devenv shell just build-web
