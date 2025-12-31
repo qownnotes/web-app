@@ -1,8 +1,10 @@
+import pluginVue from "eslint-plugin-vue";
+
 export default [
   {
-    files: ["**/*.js", "**/*.vue"],
+    files: ["**/*.{js,mjs,cjs,vue}"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: "latest",
       sourceType: "module",
       globals: {
         // Node.js globals
@@ -22,8 +24,11 @@ export default [
         fetch: "readonly",
         alert: "readonly",
         confirm: "readonly",
-        // Vue/Webpack globals
-        Vue: "readonly",
+        URL: "readonly",
+        CustomEvent: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        Cropper: "readonly",
       },
     },
     rules: {
@@ -32,6 +37,7 @@ export default [
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },
   },
+  ...pluginVue.configs["flat/essential"],
   {
     ignores: [
       "node_modules/**",
@@ -39,8 +45,6 @@ export default [
       "build/**",
       "public/**",
       "*.config.js",
-      "babel.config.js",
-      "vue.config.js",
     ],
   },
 ];
