@@ -32,3 +32,17 @@ git-apply-patch:
     echo "transferDir: {{ transferDir }}"
     git diff --no-ext-diff --staged --binary > {{ transferDir }}/{{ projectName }}.patch
     ls -l1t {{ transferDir }}/ | head -2
+
+# Open a terminal with the qownotes-web-app session
+[group('dev')]
+term-run:
+    zellij --layout term.kdl attach {{ projectName }} -c
+
+# Kill the qownotes-web-app session
+[group('dev')]
+term-kill:
+    -zellij delete-session {{ projectName }} -f
+
+# Kill and run a terminal with the qownotes-web-app session
+[group('dev')]
+term: term-kill term-run
