@@ -1,5 +1,15 @@
 # QOwnNotes Web App Changelog
 
+## 0.2.1
+
+- More optimizations were done (for [#57](https://github.com/qownnotes/web-app/issues/57))
+  - Upgraded ESLint to v9 with flat config support
+  - Fixed all npm deprecation warnings
+  - Optimized build configuration with manual chunk splitting for better performance
+    - Separated vendor libraries into individual chunks
+    - Reduced initial bundle size
+    - Improved code splitting for faster page loads
+
 ## 0.2.0
 
 - Migrate to Vue 3, Vuetify 3 and Vite (for [#57](https://github.com/qownnotes/web-app/issues/57))
