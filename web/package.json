@@ -1,48 +1,51 @@
 {
   "name": "qownnotes-web-app",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "serve": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "cropperjs": "^1.5.11",
-    "heic2any": "^0.0.3",
-    "register-service-worker": "^1.7.1",
-    "vue": "^2.6.11",
-    "vue-matomo": "^3.14.0-0",
-    "vue-qrcode-reader": "^3.0.3",
-    "vuetify": "^2.6.10"
+    "@mdi/font": "^7.4.47",
+    "core-js": "^3.39.0",
+    "cropperjs": "^1.6.2",
+    "heic2any": "^0.0.4",
+    "register-service-worker": "^1.7.2",
+    "vue": "^3.5.13",
+    "vue-matomo": "^4.2.0",
+    "vue-qrcode-reader": "^5.5.12",
+    "vuetify": "^3.7.5"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "sass": "^1.32.0",
-    "sass-loader": "^10.0.0",
-    "vue-cli-plugin-vuetify": "~2.3.1",
-    "vue-pwa-asset-generator": "^1.7.1",
-    "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.7.0"
+    "@vitejs/plugin-vue": "^5.2.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.31.0",
+    "sass": "^1.83.0",
+    "sass-loader": "^16.0.4",
+    "vite": "^6.0.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-vuetify": "^2.0.4",
+    "workbox-window": "^7.3.0"
   },
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "browser": true,
+      "es2021": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "ecmaVersion": "latest",
+      "sourceType": "module"
     },
     "rules": {}
   },

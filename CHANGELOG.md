@@ -1,5 +1,19 @@
 # QOwnNotes Web App Changelog
 
+## 0.2.0
+
+- Migrate to Vue 3, Vuetify 3 and Vite (for [#57](https://github.com/qownnotes/web-app/issues/57))
+  - **Major upgrade**: Migrated from Vue 2 to Vue 3
+  - **Major upgrade**: Migrated from Vuetify 2 to Vuetify 3
+  - **Major upgrade**: Migrated from Vue CLI to Vite for faster builds and development
+  - **Security**: Fixed all security vulnerabilities by removing deprecated Vue CLI dependencies
+  - Updated all dependencies to latest versions
+  - Improved build performance with Vite (10-100x faster development server)
+  - Added Material Design Icons font package
+  - Modernized codebase to use Vue 3 features and APIs
+  - Updated service worker implementation with vite-plugin-pwa
+  - Updated Docker build to use Node 22
+
 ## 0.1.12
 
 - Update dependencies

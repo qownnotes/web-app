@@ -5,7 +5,6 @@ module.exports = {
       return args;
     });
   },
-  transpileDependencies: ["vuetify"],
   pwa: {
     themeColor: "#1d235f",
     msTileColor: "#130f40",

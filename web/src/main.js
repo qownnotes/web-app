@@ -1,23 +1,25 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
-import VueQrcodeReader from "vue-qrcode-reader";
+import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import VueMatomo from "vue-matomo";
 import "./registerServiceWorker";
 import "cropperjs/dist/cropper.css";
 
-Vue.config.productionTip = false;
+const app = createApp(App);
 
 // https://www.npmjs.com/package/vue-matomo
-Vue.use(VueMatomo, {
+app.use(VueMatomo, {
   host: "https://p.bekerle.com",
   siteId: 8,
   enableHeartBeatTimer: true,
 });
 
-Vue.use(VueQrcodeReader);
+// Register vue-qrcode-reader components globally
+app.component("QrcodeStream", QrcodeStream);
+app.component("QrcodeDropZone", QrcodeDropZone);
+app.component("QrcodeCapture", QrcodeCapture);
 
-new Vue({
-  vuetify,
-  render: (h) => h(App),
-}).$mount("#app");
+app.use(vuetify);
+
+app.mount("#app");

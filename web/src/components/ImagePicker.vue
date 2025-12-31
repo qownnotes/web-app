@@ -2,7 +2,7 @@
   <v-container>
     <img ref="image" :alt="image.name" src="" />
     <v-file-input
-      @change="selectFile"
+      @update:model-value="selectFile"
       :loading="isFileLoading"
       accept="image/*"
       label="Take or select photo"
@@ -15,7 +15,7 @@
           type="number"
           label="Max. width"
           suffix="px"
-          @change="storeMaxWidth"
+          @update:model-value="storeMaxWidth"
         ></v-text-field>
       </v-col>
       <v-col cols="6" sm="4">
@@ -24,7 +24,7 @@
           type="number"
           label="Max. height"
           suffix="px"
-          @change="storeMaxHeight"
+          @update:model-value="storeMaxHeight"
         ></v-text-field>
       </v-col>
       <v-col cols="6" sm="4">
@@ -32,32 +32,30 @@
           v-model="imageFormat"
           :items="imageFormats"
           label="Output image format"
-          @change="storeImageFormat"
+          @update:model-value="storeImageFormat"
         ></v-combobox>
       </v-col>
     </v-row>
-    <v-layout v-if="showTools">
+    <v-row v-if="showTools">
       <v-btn
         class="mx-2"
-        fab
-        small
+        icon="mdi-rotate-left"
+        size="small"
         color="primary"
         title="Rotate Left"
         @click="clickTool('rotate-left')"
       >
-        <v-icon dark> mdi-rotate-left </v-icon>
       </v-btn>
       <v-btn
         class="mx-2"
-        fab
-        small
+        icon="mdi-rotate-right"
+        size="small"
         color="primary"
         title="Rotate Right"
         @click="clickTool('rotate-right')"
       >
-        <v-icon dark> mdi-rotate-right </v-icon>
       </v-btn>
-    </v-layout>
+    </v-row>
   </v-container>
 </template>
 

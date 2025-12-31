@@ -5,7 +5,7 @@
         class="pt-5"
         :rules="rules"
         v-model="token"
-        @change="change"
+        @update:model-value="change"
         hide-details="auto"
         :type="visibility ? 'password' : 'text'"
         :append-icon="visibility ? 'mdi-eye' : 'mdi-eye-off'"
@@ -23,7 +23,7 @@
     <v-row>
       <qrcode-stream
         @decode="onDecode"
-        :track="this.paintOutline"
+        :track="paintOutline"
         v-if="qrCodeEnabled"
       ></qrcode-stream>
     </v-row>

@@ -38,15 +38,13 @@
     <!--      </v-list>-->
     <!--    </v-navigation-drawer>-->
 
-    <v-app-bar app>
+    <v-app-bar>
       <!--      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>-->
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
-          contain
           src="/img/icon.svg"
-          transition="scale-transition"
           width="40"
         />
 
@@ -67,24 +65,24 @@
 
     <v-footer app>
       <v-alert
-        dense
+        density="compact"
         type="warning"
         v-model="showWarning"
-        border="left"
-        dismissible
+        border="start"
+        closable
       >
-        {{ this.warningText }}
+        {{ warningText }}
       </v-alert>
     </v-footer>
   </v-app>
 </template>
 
 <script>
-import SendImage from "@/components/SendImage";
-import ConfigToken from "@/components/ConfigToken";
-import Intro from "@/components/Intro";
-import ImagePicker from "@/components/ImagePicker";
-import { version } from "../package";
+import SendImage from "@/components/SendImage.vue";
+import ConfigToken from "@/components/ConfigToken.vue";
+import Intro from "@/components/Intro.vue";
+import ImagePicker from "@/components/ImagePicker.vue";
+import { version } from "../package.json";
 
 export default {
   name: "App",
@@ -114,9 +112,9 @@ export default {
     window.addEventListener("warning", this.handleWarningEvent);
     window._paq.push(["trackPageView"]);
     window._paq.push(["setCustomDimension", 1, version]);
-    window._paq.push(["setCustomDimension", 2, process.env.NODE_ENV]);
+    window._paq.push(["setCustomDimension", 2, import.meta.env.MODE]);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener("warning", this.handleWarningEvent);
   },
 };

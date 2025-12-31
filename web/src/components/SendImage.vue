@@ -7,11 +7,11 @@
           :disabled="sending"
           v-if="allowSendButton"
           color="blue-grey"
-          class="ma-2 white--text"
-          fab
+          class="ma-2"
+          icon="mdi-cloud-upload"
+          size="large"
           v-on:click="sendFile"
         >
-          <v-icon dark> mdi-cloud-upload </v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -68,7 +68,7 @@ export default {
   beforeMount() {
     WebSocketService.init();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     WebSocketService.close();
   },
 };
