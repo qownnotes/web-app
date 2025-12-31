@@ -30,6 +30,10 @@
     "vite-plugin-vuetify": "^2.0.4",
     "workbox-window": "^7.3.0"
   },
+  "overrides": {
+    "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@^1.5.0",
+    "source-map": "^0.7.4"
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
