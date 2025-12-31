@@ -1,77 +1,61 @@
 <template>
   <v-container>
-    <img
-        ref="image"
-        :alt="image.name"
-        src="" />
+    <img ref="image" :alt="image.name" src="" />
     <v-file-input
-        @change="selectFile"
-        :loading="isFileLoading"
-        accept="image/*"
-        label="Take or select photo"
-        show-size
+      @change="selectFile"
+      :loading="isFileLoading"
+      accept="image/*"
+      label="Take or select photo"
+      show-size
     ></v-file-input>
     <v-row v-if="showTools">
-      <v-col
-          cols="6"
-          sm="4"
-      >
+      <v-col cols="6" sm="4">
         <v-text-field
-            v-model="maxWidth"
-            type="number"
-            label="Max. width"
-            suffix="px"
-            @change="storeMaxWidth"
+          v-model="maxWidth"
+          type="number"
+          label="Max. width"
+          suffix="px"
+          @change="storeMaxWidth"
         ></v-text-field>
       </v-col>
-      <v-col
-          cols="6"
-          sm="4"
-      >
+      <v-col cols="6" sm="4">
         <v-text-field
-            v-model="maxHeight"
-            type="number"
-            label="Max. height"
-            suffix="px"
-            @change="storeMaxHeight"
+          v-model="maxHeight"
+          type="number"
+          label="Max. height"
+          suffix="px"
+          @change="storeMaxHeight"
         ></v-text-field>
       </v-col>
-      <v-col
-          cols="6"
-          sm="4"
-      >
+      <v-col cols="6" sm="4">
         <v-combobox
-            v-model="imageFormat"
-            :items="imageFormats"
-            label="Output image format"
-            @change="storeImageFormat"
+          v-model="imageFormat"
+          :items="imageFormats"
+          label="Output image format"
+          @change="storeImageFormat"
         ></v-combobox>
       </v-col>
     </v-row>
     <v-layout v-if="showTools">
       <v-btn
-          class="mx-2"
-          fab
-          small
-          color="primary"
-          title="Rotate Left"
-          @click="clickTool('rotate-left')"
+        class="mx-2"
+        fab
+        small
+        color="primary"
+        title="Rotate Left"
+        @click="clickTool('rotate-left')"
       >
-        <v-icon dark>
-          mdi-rotate-left
-        </v-icon>
+        <v-icon dark> mdi-rotate-left </v-icon>
       </v-btn>
       <v-btn
-          class="mx-2"
-          fab
-          small
-          color="primary"
-          title="Rotate Right"
-          @click="clickTool('rotate-right')"
+        class="mx-2"
+        fab
+        small
+        color="primary"
+        title="Rotate Right"
+        @click="clickTool('rotate-right')"
       >
-        <v-icon dark>
-          mdi-rotate-right
-        </v-icon>
+        <v-icon dark> mdi-rotate-right </v-icon>
       </v-btn>
     </v-layout>
   </v-container>
@@ -86,7 +70,7 @@ img {
 </style>
 
 <script>
-import Cropper from 'cropperjs';
+import Cropper from "cropperjs";
 import heic2any from "heic2any";
 
 export default {
@@ -94,8 +78,8 @@ export default {
     originalFile: null,
     isFileLoading: false,
     image: {},
-    imageFormat: window.localStorage.getItem("imageFormat") || 'jpeg',
-    imageFormats: ['jpeg', 'png'],
+    imageFormat: window.localStorage.getItem("imageFormat") || "jpeg",
+    imageFormats: ["jpeg", "png"],
     // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
     cropper: null,
@@ -119,29 +103,29 @@ export default {
     },
     clickTool(action) {
       const { cropper } = this;
-      window._paq.push(['trackEvent', 'Image', 'ToolAction', action]);
+      window._paq.push(["trackEvent", "Image", "ToolAction", action]);
       console.debug(action);
       switch (action) {
-        case 'move':
-        case 'crop':
+        case "move":
+        case "crop":
           cropper.setDragMode(action);
           break;
-        case 'zoom-in':
+        case "zoom-in":
           cropper.zoom(0.1);
           break;
-        case 'zoom-out':
+        case "zoom-out":
           cropper.zoom(-0.1);
           break;
-        case 'rotate-left':
+        case "rotate-left":
           cropper.rotate(-90);
           break;
-        case 'rotate-right':
+        case "rotate-right":
           cropper.rotate(90);
           break;
-        case 'flip-horizontal':
+        case "flip-horizontal":
           cropper.scaleX(-cropper.getData().scaleX || -1);
           break;
-        case 'flip-vertical':
+        case "flip-vertical":
           cropper.scaleY(-cropper.getData().scaleY || -1);
           break;
         default:
@@ -159,9 +143,9 @@ export default {
         const fileName = file.name;
         file = await heic2any({
           blob: file,
-          toType: "image/jpeg"
+          toType: "image/jpeg",
         });
-        file.name = fileName + '.jpg';
+        file.name = fileName + ".jpg";
       }
 
       this.originalFile = file;
@@ -170,15 +154,15 @@ export default {
       this.image = {
         name: file.name,
         type: file.type,
-        url: URL.createObjectURL(file)
-      }
+        url: URL.createObjectURL(file),
+      };
 
       // this is crucial, "src" must be set this way for cropper to work
       this.$refs.image.src = this.image.url;
 
       this.cropper = new Cropper(this.$refs.image, {
         autoCrop: false,
-        dragMode: 'move',
+        dragMode: "move",
         background: false,
         // crop(event) {
         //   console.debug(event.detail.x);
@@ -192,7 +176,7 @@ export default {
         ready: () => {
           console.debug("ready");
           this.showTools = true;
-          window._paq.push(['trackEvent', 'Image', 'Loaded', file.size]);
+          window._paq.push(["trackEvent", "Image", "Loaded", file.size]);
 
           const event = new CustomEvent("image-loaded");
           window.dispatchEvent(event);
@@ -225,7 +209,10 @@ export default {
 
       // check if image size needs to be adapted
       const imageData = this.cropper.getImageData();
-      if (imageData.naturalHeight > this.maxHeight || imageData.naturalWidth > this.maxWidth) {
+      if (
+        imageData.naturalHeight > this.maxHeight ||
+        imageData.naturalWidth > this.maxWidth
+      ) {
         return true;
       }
 
@@ -242,25 +229,27 @@ export default {
     },
     storeImageFormat(value) {
       window.localStorage.setItem("imageFormat", value);
-    }
+    },
   },
   mounted() {
     // send image if image sending was requested
     window.addEventListener("retrieve-image", () => {
       if (this.isImageModified()) {
         // send the image from Cropper is it was modified
-        this.cropper.getCroppedCanvas({
-          maxWidth: this.maxWidth,
-          maxHeight: this.maxHeight,
-        }).toBlob((blob) => {
-          blob.name = this.image.name;
-          this.sendImageFile(blob);
-        }, 'image/' + this.imageFormat);
+        this.cropper
+          .getCroppedCanvas({
+            maxWidth: this.maxWidth,
+            maxHeight: this.maxHeight,
+          })
+          .toBlob((blob) => {
+            blob.name = this.image.name;
+            this.sendImageFile(blob);
+          }, "image/" + this.imageFormat);
       } else {
         // send the original image
         this.sendImageFile(this.originalFile);
       }
     });
-  }
-}
+  },
+};
 </script>

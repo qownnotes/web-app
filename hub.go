@@ -3,8 +3,8 @@ package main
 import "log"
 
 type message struct {
-	data []byte
-	room string
+	data   []byte
+	room   string
 	sender *connection
 }
 
@@ -55,7 +55,7 @@ func (h *hub) run() {
 
 				m := message{[]byte(
 					"{\"command\": \"showWarning\", " +
-					"\"msg\": \"More than 2 connections are using this token! Are multiple instances of QOwnNotes active?\"}"),
+						"\"msg\": \"More than 2 connections are using this token! Are multiple instances of QOwnNotes active?\"}"),
 					s.room, nil}
 				sendMessage(m)
 			}

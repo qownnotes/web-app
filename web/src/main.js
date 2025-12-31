@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify';
+import Vue from "vue";
+import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
 import VueQrcodeReader from "vue-qrcode-reader";
 import VueMatomo from "vue-matomo";
-import './registerServiceWorker'
-import 'cropperjs/dist/cropper.css';
+import "./registerServiceWorker";
+import "cropperjs/dist/cropper.css";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 // https://www.npmjs.com/package/vue-matomo
 Vue.use(VueMatomo, {
@@ -19,5 +19,5 @@ Vue.use(VueQrcodeReader);
 
 new Vue({
   vuetify,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

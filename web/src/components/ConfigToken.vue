@@ -2,16 +2,16 @@
   <v-container>
     <v-row>
       <v-text-field
-          class="pt-5"
-          :rules="rules"
-          v-model="token"
-          @change="change"
-          hide-details="auto"
-          :type="visibility ? 'password' : 'text'"
-          :append-icon="visibility ? 'mdi-eye' : 'mdi-eye-off'"
-          append-outer-icon="mdi-qrcode"
-          @click:append="() => (visibility = !visibility)"
-          @click:append-outer="showQRCode"
+        class="pt-5"
+        :rules="rules"
+        v-model="token"
+        @change="change"
+        hide-details="auto"
+        :type="visibility ? 'password' : 'text'"
+        :append-icon="visibility ? 'mdi-eye' : 'mdi-eye-off'"
+        append-outer-icon="mdi-qrcode"
+        @click:append="() => (visibility = !visibility)"
+        @click:append-outer="showQRCode"
       >
         <template v-slot:label>
           <div>
@@ -22,9 +22,9 @@
     </v-row>
     <v-row>
       <qrcode-stream
-          @decode="onDecode"
-          :track="this.paintOutline"
-          v-if="qrCodeEnabled"
+        @decode="onDecode"
+        :track="this.paintOutline"
+        v-if="qrCodeEnabled"
       ></qrcode-stream>
     </v-row>
   </v-container>
@@ -39,25 +39,29 @@ export default {
     visibility: String,
     qrCodeEnabled: false,
     rules: [
-      value => !!value || 'You need to enter a token to communicate with your local instance of QOwnNotes!',
-      value => (value && value.length >= 10) || 'A minimum of 10 characters are required!',
-      value => {
-        const pattern = /^[0-9a-zA-Z]+$/
-        return pattern.test(value) || 'Please only use numbers and characters!'
-      }
+      (value) =>
+        !!value ||
+        "You need to enter a token to communicate with your local instance of QOwnNotes!",
+      (value) =>
+        (value && value.length >= 10) ||
+        "A minimum of 10 characters are required!",
+      (value) => {
+        const pattern = /^[0-9a-zA-Z]+$/;
+        return pattern.test(value) || "Please only use numbers and characters!";
+      },
     ],
   }),
   methods: {
-    change (value) {
+    change(value) {
       console.debug(value);
       WebSocketService.updateToken(value);
     },
-    showQRCode () {
+    showQRCode() {
       this.qrCodeEnabled = !this.qrCodeEnabled;
     },
-    paintOutline (detectedCodes, ctx) {
+    paintOutline(detectedCodes, ctx) {
       for (const detectedCode of detectedCodes) {
-        const [ firstPoint, ...otherPoints ] = detectedCode.cornerPoints
+        const [firstPoint, ...otherPoints] = detectedCode.cornerPoints;
 
         ctx.strokeStyle = "red";
 
@@ -71,15 +75,15 @@ export default {
         ctx.stroke();
       }
     },
-    onDecode (decodedString) {
+    onDecode(decodedString) {
       console.debug("decodedString", decodedString);
 
-      if (decodedString.startsWith('qontoken://')) {
+      if (decodedString.startsWith("qontoken://")) {
         this.token = decodedString.slice(11, 100);
         this.change(this.token);
         this.qrCodeEnabled = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
