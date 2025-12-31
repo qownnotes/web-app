@@ -106,6 +106,47 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Separate Vue core
+          if (id.includes("node_modules/vue/")) {
+            return "vue-vendor";
+          }
+          // Separate Vuetify library
+          if (
+            id.includes("node_modules/vuetify/") &&
+            !id.includes("node_modules/vuetify/lib/components")
+          ) {
+            return "vuetify-vendor";
+          }
+          // Separate Vuetify components into their own chunk
+          if (id.includes("node_modules/vuetify/lib/components")) {
+            return "vuetify-components";
+          }
+          // Separate QR code library
+          if (id.includes("node_modules/vue-qrcode-reader")) {
+            return "qrcode-vendor";
+          }
+          // Separate cropper library
+          if (id.includes("node_modules/cropperjs")) {
+            return "cropper-vendor";
+          }
+          // Separate analytics
+          if (id.includes("node_modules/vue-matomo")) {
+            return "analytics-vendor";
+          }
+          // Separate other node_modules
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
+    // Increase the chunk size warning limit to 1600 kB since Vuetify components are large
+    chunkSizeWarningLimit: 1600,
+  },
   server: {
     port: 8080,
   },
