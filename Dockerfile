@@ -1,5 +1,5 @@
 # Build go app
-FROM golang:alpine as go
+FROM golang:alpine AS go
 COPY *.go /build/
 COPY *.mod /build/
 COPY *.sum /build/
@@ -7,7 +7,7 @@ WORKDIR /build
 RUN go build -o server
 
 # Build vue.js app
-FROM node:22 as node
+FROM node:22 AS node
 COPY ./web /build
 WORKDIR /build
 RUN npm install
