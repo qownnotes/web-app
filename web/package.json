@@ -31,7 +31,7 @@
     "workbox-window": "^7.3.0"
   },
   "overrides": {
-    "serialize-javascript": "^7.0.3",
+    "serialize-javascript": "^7.0.5",
     "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@^1.5.0",
     "source-map": "^0.7.4"
   },
