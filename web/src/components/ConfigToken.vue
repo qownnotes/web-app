@@ -5,7 +5,7 @@
         class="pt-5"
         :rules="rules"
         v-model="token"
-        @update:model-value="change"
+        @update:model-value="changeToken"
         hide-details="auto"
         :type="visibility ? 'password' : 'text'"
         :append-icon="visibility ? 'mdi-eye' : 'mdi-eye-off'"
@@ -19,6 +19,16 @@
           </div>
         </template>
       </v-text-field>
+    </v-row>
+    <v-row>
+      <v-text-field
+        class="pt-3"
+        v-model="connectionName"
+        @update:model-value="changeConnectionName"
+        hide-details="auto"
+        label="Connection name"
+        placeholder="e.g. My Phone"
+      ></v-text-field>
     </v-row>
     <v-row>
       <qrcode-stream
@@ -36,6 +46,7 @@ import WebSocketService from "@/services/WebSocketService";
 export default {
   data: () => ({
     token: WebSocketService.readToken(),
+    connectionName: WebSocketService.readConnectionName(),
     visibility: String,
     qrCodeEnabled: false,
     rules: [
@@ -52,9 +63,13 @@ export default {
     ],
   }),
   methods: {
-    change(value) {
+    changeToken(value) {
       console.debug(value);
       WebSocketService.updateToken(value);
+    },
+    changeConnectionName(value) {
+      console.debug("Connection name updated:", value);
+      WebSocketService.updateConnectionName(value);
     },
     showQRCode() {
       this.qrCodeEnabled = !this.qrCodeEnabled;
@@ -80,7 +95,7 @@ export default {
 
       if (decodedString.startsWith("qontoken://")) {
         this.token = decodedString.slice(11, 100);
-        this.change(this.token);
+        this.changeToken(this.token);
         this.qrCodeEnabled = false;
       }
     },
