@@ -1,5 +1,16 @@
 # QOwnNotes Web App Changelog
 
+## 0.3.0
+
+- Added **Connection name** field in the configuration section; the name is stored
+  in `localStorage` and sent to the relay server on connect so other devices in
+  the room can identify this browser session
+- The relay server now tracks connection names and responds to `getConnectedDevices`
+  requests with the list of names of all currently connected clients
+- Removed the intrusive `showWarning` dialog that appeared when more than two
+  connections used the same token — the connected devices list in the QOwnNotes
+  desktop settings now surfaces this information without interrupting the user
+
 ## 0.2.1
 
 - More optimizations were done (for [#57](https://github.com/qownnotes/web-app/issues/57))

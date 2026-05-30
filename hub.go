@@ -1,6 +1,9 @@
 package main
 
-import "log"
+import (
+	"encoding/json"
+	"log"
+)
 
 type message struct {
 	data   []byte
@@ -19,6 +22,9 @@ type hub struct {
 	// Registered connections.
 	rooms map[string]map[*connection]bool
 
+	// Connection names keyed by connection pointer.
+	connectionNames map[*connection]string
+
 	// Inbound messages from the connections.
 	broadcast chan message
 
@@ -30,10 +36,17 @@ type hub struct {
 }
 
 var h = hub{
-	broadcast:  make(chan message),
-	register:   make(chan subscription),
-	unregister: make(chan subscription),
-	rooms:      make(map[string]map[*connection]bool),
+	broadcast:       make(chan message),
+	register:        make(chan subscription),
+	unregister:      make(chan subscription),
+	rooms:           make(map[string]map[*connection]bool),
+	connectionNames: make(map[*connection]string),
+}
+
+// incomingMessage represents a parsed message from a client.
+type incomingMessage struct {
+	Command        string `json:"command"`
+	ConnectionName string `json:"connectionName"`
 }
 
 func (h *hub) run() {
@@ -49,21 +62,12 @@ func (h *hub) run() {
 
 			log.Printf("Registered room: %s", s.room)
 
-			// Send a warning to the connections of the room if there are more than two connections
-			if len(h.rooms[s.room]) > 2 {
-				log.Printf("Warning! More than 2 connections in room %s", s.room)
-
-				m := message{[]byte(
-					"{\"command\": \"showWarning\", " +
-						"\"msg\": \"More than 2 connections are using this token! Are multiple instances of QOwnNotes active?\"}"),
-					s.room, nil}
-				sendMessage(m)
-			}
 		case s := <-h.unregister:
 			connections := h.rooms[s.room]
 			if connections != nil {
 				if _, ok := connections[s.conn]; ok {
 					delete(connections, s.conn)
+					delete(h.connectionNames, s.conn)
 					close(s.conn.send)
 					if len(connections) == 0 {
 						delete(h.rooms, s.room)
@@ -71,6 +75,49 @@ func (h *hub) run() {
 				}
 			}
 		case m := <-h.broadcast:
+			// Check if this is a control command that the hub should handle directly
+			var msg incomingMessage
+			if err := json.Unmarshal(m.data, &msg); err == nil {
+				if msg.Command == "register" {
+					// Store the connection name for this sender
+					if msg.ConnectionName != "" {
+						h.connectionNames[m.sender] = msg.ConnectionName
+						log.Printf("Registered connection name '%s' in room %s", msg.ConnectionName, m.room)
+					}
+					// Don't relay register messages to other clients
+					continue
+				} else if msg.Command == "getConnectedDevices" {
+					// Collect names of all connections in the room
+					connections := h.rooms[m.room]
+					var names []string
+					for c := range connections {
+						if name, ok := h.connectionNames[c]; ok && name != "" {
+							names = append(names, name)
+						}
+					}
+
+					// Build response and send only to the requester
+					type devicesResponse struct {
+						Command string   `json:"command"`
+						Devices []string `json:"devices"`
+					}
+					resp := devicesResponse{Command: "connectedDevices", Devices: names}
+					if names == nil {
+						resp.Devices = []string{}
+					}
+					data, err := json.Marshal(resp)
+					if err == nil {
+						select {
+						case m.sender.send <- data:
+						default:
+							close(m.sender.send)
+							delete(connections, m.sender)
+						}
+					}
+					continue
+				}
+			}
+
 			sendMessage(m)
 		}
 	}

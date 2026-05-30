@@ -19,6 +19,15 @@ class WebSocketService {
     window.ws = new WebSocket(url);
     window.ws.onopen = () => {
       console.log("Connected to socket " + url);
+
+      // Send registration with connection name so other devices can identify this client
+      const connectionName = this.readConnectionName() || "QOwnNotes Web App";
+      window.ws.send(
+        JSON.stringify({
+          command: "register",
+          connectionName: connectionName,
+        }),
+      );
     };
 
     window.ws.onclose = () => {
@@ -36,12 +45,19 @@ class WebSocketService {
 
       switch (m.command) {
         case "showWarning": {
-          const event = new CustomEvent("warning", { detail: m.msg });
-          window.dispatchEvent(event);
+          // Suppress the multiple-devices warning; connected devices are shown in the UI instead
+          console.debug("Suppressed server warning:", m.msg);
           break;
         }
         case "confirmInsert": {
           const event = new CustomEvent("insert-confirmed");
+          window.dispatchEvent(event);
+          break;
+        }
+        case "connectedDevices": {
+          const event = new CustomEvent("connected-devices-updated", {
+            detail: m.devices,
+          });
           window.dispatchEvent(event);
           break;
         }
@@ -74,8 +90,23 @@ class WebSocketService {
     this.init();
   }
 
+  readConnectionName() {
+    return window.localStorage.getItem("connectionName") || "";
+  }
+
+  updateConnectionName(name) {
+    window.localStorage.setItem("connectionName", name.trim());
+  }
+
   isOpen() {
     return window.ws && window.ws.readyState === WebSocket.OPEN;
+  }
+
+  requestConnectedDevices() {
+    if (!this.isOpen()) {
+      return;
+    }
+    window.ws.send(JSON.stringify({ command: "getConnectedDevices" }));
   }
 }
 
