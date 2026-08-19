@@ -1,5 +1,10 @@
 # QOwnNotes Web App Changelog
 
+## 0.4.1
+
+- Prevented unavailable or blocked Matomo analytics from causing JavaScript
+  errors or interrupting application functionality
+
 ## 0.4.0
 
 - Updated the frontend stack to Vue 3.5, Vuetify 4, Vite 8 and ESLint 10

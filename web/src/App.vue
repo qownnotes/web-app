@@ -110,9 +110,9 @@ export default {
   },
   mounted() {
     window.addEventListener("warning", this.handleWarningEvent);
-    window._paq.push(["trackPageView"]);
-    window._paq.push(["setCustomDimension", 1, version]);
-    window._paq.push(["setCustomDimension", 2, import.meta.env.MODE]);
+    window._paq?.push(["trackPageView"]);
+    window._paq?.push(["setCustomDimension", 1, version]);
+    window._paq?.push(["setCustomDimension", 2, import.meta.env.MODE]);
   },
   beforeUnmount() {
     window.removeEventListener("warning", this.handleWarningEvent);

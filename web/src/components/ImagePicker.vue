@@ -109,7 +109,7 @@ export default {
     },
     clickTool(action) {
       const cropperImage = this.cropper.getCropperImage();
-      window._paq.push(["trackEvent", "Image", "ToolAction", action]);
+      window._paq?.push(["trackEvent", "Image", "ToolAction", action]);
       console.debug(action);
       switch (action) {
         case "zoom-in":
@@ -179,7 +179,7 @@ export default {
       this.naturalHeight = loadedImage.naturalHeight;
       this.rotation = 0;
       this.showTools = true;
-      window._paq.push(["trackEvent", "Image", "Loaded", file.size]);
+      window._paq?.push(["trackEvent", "Image", "Loaded", file.size]);
       window.dispatchEvent(new CustomEvent("image-loaded"));
 
       this.isFileLoading = false;
