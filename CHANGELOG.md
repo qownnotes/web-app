@@ -1,5 +1,14 @@
 # QOwnNotes Web App Changelog
 
+## 0.4.0
+
+- Updated the frontend stack to Vue 3.5, Vuetify 4, Vite 8 and ESLint 10
+- Migrated the image editor to CropperJS 2 while preserving image rotation,
+  resizing, format conversion and export behavior
+- Updated all direct JavaScript dependencies and resolved all npm audit findings
+- Updated the backend to Go 1.26, Gorilla Mux 1.8.1 and Gorilla WebSocket 1.5.3
+- Updated the container build to Node.js 24 with deterministic npm installs
+
 ## 0.3.0
 
 - Added **Connection name** field in the configuration section; the name is stored
