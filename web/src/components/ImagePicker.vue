@@ -65,6 +65,11 @@ img {
   max-width: 100%;
   max-height: 30vh;
 }
+
+cropper-canvas {
+  height: 30vh;
+  width: 100%;
+}
 </style>
 
 <script>
@@ -81,6 +86,9 @@ export default {
     // image: {url: "/img/icons/apple-touch-icon.png"},
     showTools: false,
     cropper: null,
+    naturalWidth: 0,
+    naturalHeight: 0,
+    rotation: 0,
     maxWidth: window.localStorage.getItem("maxWidth") || 5120,
     maxHeight: window.localStorage.getItem("maxHeight") || 5120,
   }),
@@ -100,31 +108,29 @@ export default {
       window.dispatchEvent(event);
     },
     clickTool(action) {
-      const { cropper } = this;
+      const cropperImage = this.cropper.getCropperImage();
       window._paq.push(["trackEvent", "Image", "ToolAction", action]);
       console.debug(action);
       switch (action) {
-        case "move":
-        case "crop":
-          cropper.setDragMode(action);
-          break;
         case "zoom-in":
-          cropper.zoom(0.1);
+          cropperImage.$zoom(0.1);
           break;
         case "zoom-out":
-          cropper.zoom(-0.1);
+          cropperImage.$zoom(-0.1);
           break;
         case "rotate-left":
-          cropper.rotate(-90);
+          cropperImage.$rotate("-90deg");
+          this.rotation -= 90;
           break;
         case "rotate-right":
-          cropper.rotate(90);
+          cropperImage.$rotate("90deg");
+          this.rotation += 90;
           break;
         case "flip-horizontal":
-          cropper.scaleX(-cropper.getData().scaleX || -1);
+          cropperImage.$scale(-1, 1);
           break;
         case "flip-vertical":
-          cropper.scaleY(-cropper.getData().scaleY || -1);
+          cropperImage.$scale(1, -1);
           break;
         default:
       }
@@ -159,27 +165,22 @@ export default {
       this.$refs.image.src = this.image.url;
 
       this.cropper = new Cropper(this.$refs.image, {
-        autoCrop: false,
-        dragMode: "move",
-        background: false,
-        // crop(event) {
-        //   console.debug(event.detail.x);
-        //   console.debug(event.detail.y);
-        //   console.debug(event.detail.width);
-        //   console.debug(event.detail.height);
-        //   console.debug(event.detail.rotate);
-        //   console.debug(event.detail.scaleX);
-        //   console.debug(event.detail.scaleY);
-        // },
-        ready: () => {
-          console.debug("ready");
-          this.showTools = true;
-          window._paq.push(["trackEvent", "Image", "Loaded", file.size]);
-
-          const event = new CustomEvent("image-loaded");
-          window.dispatchEvent(event);
-        },
+        template: `
+          <cropper-canvas background>
+            <cropper-image rotatable scalable translatable></cropper-image>
+            <cropper-handle action="move" plain></cropper-handle>
+          </cropper-canvas>
+        `,
       });
+
+      const cropperImage = this.cropper.getCropperImage();
+      const loadedImage = await cropperImage.$ready();
+      this.naturalWidth = loadedImage.naturalWidth;
+      this.naturalHeight = loadedImage.naturalHeight;
+      this.rotation = 0;
+      this.showTools = true;
+      window._paq.push(["trackEvent", "Image", "Loaded", file.size]);
+      window.dispatchEvent(new CustomEvent("image-loaded"));
 
       this.isFileLoading = false;
 
@@ -206,18 +207,42 @@ export default {
       }
 
       // check if image size needs to be adapted
-      const imageData = this.cropper.getImageData();
-      if (
-        imageData.naturalHeight > this.maxHeight ||
-        imageData.naturalWidth > this.maxWidth
-      ) {
+      const rotated = Math.abs(this.rotation % 180) === 90;
+      const width = rotated ? this.naturalHeight : this.naturalWidth;
+      const height = rotated ? this.naturalWidth : this.naturalHeight;
+      if (height > Number(this.maxHeight) || width > Number(this.maxWidth)) {
         return true;
       }
 
       // check if image needs to be rotated
-      const data = this.cropper.getData();
+      return this.rotation % 360 !== 0;
+    },
+    async getImageCanvas() {
+      const source = await this.cropper.getCropperImage().$ready();
+      const rotated = Math.abs(this.rotation % 180) === 90;
+      const sourceWidth = rotated ? source.naturalHeight : source.naturalWidth;
+      const sourceHeight = rotated ? source.naturalWidth : source.naturalHeight;
+      const scale = Math.min(
+        Number(this.maxWidth) / sourceWidth,
+        Number(this.maxHeight) / sourceHeight,
+        1,
+      );
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(sourceWidth * scale);
+      canvas.height = Math.round(sourceHeight * scale);
 
-      return (data.rotate || 0) !== 0;
+      const context = canvas.getContext("2d");
+      context.translate(canvas.width / 2, canvas.height / 2);
+      context.rotate((this.rotation * Math.PI) / 180);
+      context.drawImage(
+        source,
+        (-source.naturalWidth * scale) / 2,
+        (-source.naturalHeight * scale) / 2,
+        source.naturalWidth * scale,
+        source.naturalHeight * scale,
+      );
+
+      return canvas;
     },
     storeMaxWidth(value) {
       window.localStorage.setItem("maxWidth", value);
@@ -231,18 +256,13 @@ export default {
   },
   mounted() {
     // send image if image sending was requested
-    window.addEventListener("retrieve-image", () => {
+    window.addEventListener("retrieve-image", async () => {
       if (this.isImageModified()) {
-        // send the image from Cropper is it was modified
-        this.cropper
-          .getCroppedCanvas({
-            maxWidth: this.maxWidth,
-            maxHeight: this.maxHeight,
-          })
-          .toBlob((blob) => {
-            blob.name = this.image.name;
-            this.sendImageFile(blob);
-          }, "image/" + this.imageFormat);
+        const canvas = await this.getImageCanvas();
+        canvas.toBlob((blob) => {
+          blob.name = this.image.name;
+          this.sendImageFile(blob);
+        }, "image/" + this.imageFormat);
       } else {
         // send the original image
         this.sendImageFile(this.originalFile);

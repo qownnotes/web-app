@@ -1,6 +1,7 @@
 import pluginVue from "eslint-plugin-vue";
 
 export default [
+  ...pluginVue.configs["flat/essential"],
   {
     files: ["**/*.{js,mjs,cjs,vue}"],
     languageOptions: {
@@ -35,9 +36,9 @@ export default [
       "no-console": "off",
       "no-debugger": "warn",
       "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "vue/multi-word-component-names": "off",
     },
   },
-  ...pluginVue.configs["flat/essential"],
   {
     ignores: [
       "node_modules/**",

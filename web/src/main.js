@@ -4,7 +4,6 @@ import vuetify from "./plugins/vuetify";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import VueMatomo from "vue-matomo";
 import "./registerServiceWorker";
-import "cropperjs/dist/cropper.css";
 
 const app = createApp(App);
 
