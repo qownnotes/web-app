@@ -15,7 +15,7 @@
     "core-js": "^3.50.0",
     "cropperjs": "^2.1.1",
     "heic2any": "^0.0.4",
-    "vue": "^3.5.41",
+    "vue": "^3.5.43",
     "vue-matomo": "^4.2.0",
     "vue-qrcode-reader": "^5.7.3",
     "vuetify": "^4.1.10"
